@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://b78x13sh3dy2v"]
+
+[ext_resource type="Script" uid="uid://pjg8ihmv4lhm" path="res://Scripts/player_controller.gd" id="1_v0iea"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_onrkg"]
+
+[node name="Player" type="Node2D"]
+script = ExtResource("1_v0iea")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(28.75, 28.75)
+scale = Vector2(58.5, 58.5)
+texture = SubResource("PlaceholderTexture2D_onrkg")
