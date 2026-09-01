@@ -6,7 +6,7 @@ func _ready() -> void:
 	pass
 	var states: Array[State] = [
 		NormalState.new(),
-		AttackState.new()
+		AttachedState.new()
 	]
 	player_state_machine = StateMachine.new(states)
 
@@ -32,9 +32,15 @@ class NormalState extends State:
 		pass
 
 
-class AttackState extends State:
+class AttachedState extends State:
 	func update(delta, parent_machine):
 		pass
+		# TODO somehow get pos of attach node
+		# lerp to position around it that rotates
+		# (will break when things move so just lerp to starting position and then
+		#  trasition to attached from perhaps attaching state. Maybe we need detatching state as well?
+		# (or just rotate around by rotating the attach node and counter rotating us?
+		# that means we get pushed back when the blade connects
 
 
 # TODO Next is input handling

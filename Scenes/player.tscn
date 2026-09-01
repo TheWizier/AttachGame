@@ -1,12 +1,21 @@
-[gd_scene load_steps=3 format=3 uid="uid://b78x13sh3dy2v"]
+[gd_scene load_steps=4 format=3 uid="uid://b78x13sh3dy2v"]
 
 [ext_resource type="Script" uid="uid://pjg8ihmv4lhm" path="res://Scripts/player_controller.gd" id="1_v0iea"]
 [ext_resource type="Texture2D" uid="uid://cd0e8sooq0g63" path="res://Sprites/MrAttach.png" id="2_cvnsp"]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cvnsp"]
+size = Vector2(25, 350)
+
 [node name="Player" type="Node2D"]
 script = ExtResource("1_v0iea")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(28.75, 28.75)
-scale = Vector2(58.5, 58.5)
+[node name="MrAttach" type="Sprite2D" parent="."]
+position = Vector2(6, 3)
 texture = ExtResource("2_cvnsp")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(0, -165)
+shape = SubResource("RectangleShape2D_cvnsp")
+debug_color = Color(0.80682, 0.414897, 9.62615e-07, 0.42)
