@@ -15,3 +15,28 @@ func _physics_process(delta: float) -> void:
 	
 func _process(delta: float) -> void:
 	pass
+
+# State definitions #
+
+class NormalState extends State:
+	#var states: Array[State] = [
+		## States that run independently of the parent state machine
+	#]
+	#var arms_state_machine = StateMachine.new(states)
+	func enter():
+		pass
+	func exit():
+		pass
+	func update(delta, parent):
+		
+		pass
+
+
+class AttackState extends State:
+	func update(delta, parent_machine):
+		pass
+
+
+# TODO Next is input handling
+# I want a short buffer so that certain inputs gets queued if I want
+#

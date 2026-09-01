@@ -6,5 +6,5 @@ func enter():
 	pass
 func exit():
 	pass
-func update(delta):
+func update(delta, parent_machine):
 	pass
