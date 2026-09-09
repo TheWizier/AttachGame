@@ -3,7 +3,9 @@ class_name PlayerController
 
 var player_state_machine: StateMachine
 var scene_root: Node
-var active_anchor: Node
+var active_anchor: Node2D
+
+var attach_distance: float = 100
 
 @onready var attach_hitbox: Area2D = $Hitbox 
 @onready var attach_ray: RayCast2D = $RayCast2D
@@ -57,18 +59,27 @@ class NormalState extends PlayerState:
 		pass
 
 class AttachingState extends PlayerState:
-	
+	var total_duration: float = 0.5
+	var current_time: float = 0.0
+	var start_position: Vector2 = Vector2(0,0)
+	var target_position: Vector2 = Vector2(0,0)
 	func get_name():
 		return "attaching"
 
 	func enter():
 		print("AttaCHING")
 		player.reparent(player.active_anchor)
+		start_position = player.position
+		target_position = player.position.normalized()*player.attach_distance
 	
 	func update(delta, parent_machine):
-		# Lerp to position
-		# Then change state to attached
-		pass
+		# Lerp into position
+		current_time+=delta
+		current_time=min(total_duration, current_time)
+		player.position=lerp(start_position, target_position, current_time/total_duration)
+		# Exit condition
+		if current_time == total_duration:
+			parent_machine.set_state("attached")
 
 class AttachedState extends PlayerState:
 	func get_name():
@@ -78,9 +89,7 @@ class AttachedState extends PlayerState:
 		print("Attached")
 
 	func update(delta, parent_machine):
-		pass
-		# increment angle then calculate relative position ignoring collision
-		# TODO somehow get pos of attach node
+		player.position.#TODO
 
 	func exit():
 		player.reparent(player.scene_root)

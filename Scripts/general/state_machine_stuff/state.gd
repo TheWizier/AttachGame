@@ -8,5 +8,5 @@ func enter():
 	pass
 func exit():
 	pass
-func update(delta, parent_machine):
+func update(delta: float, parent_machine: StateMachine):
 	pass
