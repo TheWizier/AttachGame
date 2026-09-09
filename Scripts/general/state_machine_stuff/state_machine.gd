@@ -14,6 +14,7 @@ func _init(p_states: Array[State]) -> void:
 	for state in p_states:
 		states[state.get_name()]=state
 	active_state = p_states[0]
+	active_state.enter()
 
 func run_state_update(delta: float):
 	active_state.update(delta, self)

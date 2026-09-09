@@ -3,9 +3,6 @@
 [ext_resource type="Script" uid="uid://pjg8ihmv4lhm" path="res://Scripts/player_controller.gd" id="1_v0iea"]
 [ext_resource type="Texture2D" uid="uid://cd0e8sooq0g63" path="res://Sprites/MrAttach.png" id="2_cvnsp"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_cvnsp"]
-size = Vector2(25, 350)
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_q4lbr"]
 size = Vector2(140, 76)
 
@@ -17,17 +14,12 @@ script = ExtResource("1_v0iea")
 position = Vector2(6, 3)
 texture = ExtResource("2_cvnsp")
 
-[node name="AttachTrigger" type="Area2D" parent="." unique_id=2065102873]
-collision_layer = 8
-collision_mask = 2
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AttachTrigger" unique_id=1802990779]
-position = Vector2(0, -165)
-shape = SubResource("RectangleShape2D_cvnsp")
-debug_color = Color(0.80682, 0.414897, 9.62615e-07, 0.42)
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1435363873]
 position = Vector2(8, 54)
 shape = SubResource("RectangleShape2D_q4lbr")
 
-[connection signal="body_entered" from="AttachTrigger" to="." method="_on_attach_anchor_hit"]
+[node name="RayCast2D" type="RayCast2D" parent="." unique_id=2020096371]
+target_position = Vector2(0, -200)
+collision_mask = 2
+collide_with_areas = true
+collide_with_bodies = false

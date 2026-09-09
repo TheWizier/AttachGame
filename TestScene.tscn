@@ -1,19 +1,25 @@
-[gd_scene load_steps=4 format=3 uid="uid://bbggksndwa3cg"]
+[gd_scene format=3 uid="uid://bbggksndwa3cg"]
 
 [ext_resource type="PackedScene" uid="uid://b78x13sh3dy2v" path="res://Scenes/player.tscn" id="1_mncer"]
-[ext_resource type="Texture2D" uid="uid://50ib5btrx4eb" path="res://Sprites/icon.svg" id="2_wicfy"]
 [ext_resource type="PackedScene" uid="uid://b818kl4elwnb" path="res://Scenes/attach_node.tscn" id="3_go42g"]
 
-[node name="Node2D" type="Node2D"]
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_l6uhy"]
 
-[node name="Player" parent="." instance=ExtResource("1_mncer")]
-position = Vector2(502, 194)
+[node name="Node2D" type="Node2D" unique_id=1319603201]
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Player" parent="." unique_id=774704786 instance=ExtResource("1_mncer")]
+position = Vector2(224, 265)
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=518290296]
 position = Vector2(529, 171)
 
-[node name="TestPole" type="Sprite2D" parent="."]
-position = Vector2(230, 29)
-texture = ExtResource("2_wicfy")
+[node name="Node2D" type="Node2D" parent="." unique_id=499768818]
+position = Vector2(200, 50)
 
-[node name="AttachNode" parent="TestPole" instance=ExtResource("3_go42g")]
+[node name="AttachNode" parent="Node2D" unique_id=1063188863 instance=ExtResource("3_go42g")]
+scale = Vector2(2, 2)
+
+[node name="Sprite2D" type="Sprite2D" parent="Node2D" unique_id=1397522381]
+position = Vector2(1.9999981, 0.5)
+scale = Vector2(87.99999, 83)
+texture = SubResource("PlaceholderTexture2D_l6uhy")
