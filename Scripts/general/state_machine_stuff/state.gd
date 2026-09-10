@@ -10,3 +10,5 @@ func exit():
 	pass
 func update(delta: float, parent_machine: StateMachine):
 	pass
+func physics_update(delta: float, parent_machine: StateMachine):
+	pass

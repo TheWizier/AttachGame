@@ -18,6 +18,8 @@ func _init(p_states: Array[State]) -> void:
 
 func run_state_update(delta: float):
 	active_state.update(delta, self)
+func run_state_physics_update(delta: float):
+	active_state.physics_update(delta, self)
 
 func set_state(new_state_name: String):
 	previous_state=active_state
