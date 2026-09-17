@@ -12,13 +12,16 @@ var attach_distance: float = 100
 
 func _ready() -> void:
 	self.scene_root = get_tree().current_scene
-	var states: Array[State] = [
-		NormalState.new(self),
-		AttachingState.new(self),
-		AttachedState.new(self),
-		DetachingState.new(self)
-	]
-	player_state_machine = StateMachine.new(states)
+	player_state_machine = StateMachine.new()
+	var states: Array[State]
+	for state_type in [
+		NormalState,
+		AttachingState,
+		AttachedState,
+		DetachingState
+	]:
+		states.append(state_type.new(self, player_state_machine))
+	player_state_machine.set_states(states)
 
 func _physics_process(delta: float) -> void:
 	player_state_machine.run_state_physics_update(delta)
@@ -30,7 +33,8 @@ func _process(delta: float) -> void:
 
 class PlayerState extends State:
 	var player: PlayerController
-	func _init(player: PlayerController):
+	func _init(player: PlayerController, parent_machine: StateMachine):
+		super(parent_machine)
 		self.player = player
 
 
@@ -46,13 +50,13 @@ class NormalState extends PlayerState:
 		print("Normal")
 		pass
 
-	func update(delta, player_state_machine):
+	func update(delta):
 		if Input.is_action_just_pressed("special"):
 			if player.attach_ray.is_colliding():
 				player.active_anchor = player.attach_ray.get_collider()
-				player_state_machine.set_state("attaching")
+				parent_machine.set_state("attaching")
 
-	func physics_update(delta: float, parent_machine: StateMachine):
+	func physics_update(delta: float):
 		var input_direction: Vector2 = Input.get_vector("left", "right", "up", "down")
 		player.velocity = input_direction * movement_speed
 		player.move_and_slide()
@@ -74,7 +78,7 @@ class AttachingState extends PlayerState:
 		start_position = player.position
 		target_position = player.position.normalized()*player.attach_distance
 	
-	func update(delta, parent_machine):
+	func update(delta):
 		# Lerp into position
 		current_time+=delta
 		current_time=min(total_duration, current_time)
@@ -96,7 +100,7 @@ class AttachedState extends PlayerState:
 		print("Attached")
 		current_time=0
 
-	func update(delta, parent_machine):
+	func update(delta):
 		current_time+=delta
 		player.position = player.position.rotated(rotation_speed*delta)
 		# Exit condition
@@ -123,7 +127,7 @@ class DetachingState extends PlayerState:
 		# TODO find a valid landing spot (for now just in place)
 		target_position = player.position
 
-	func update(delta, parent_machine):
+	func update(delta):
 		# Lerp into position
 		current_time+=delta
 		current_time=min(total_duration, current_time)
@@ -132,6 +136,17 @@ class DetachingState extends PlayerState:
 		if current_time == total_duration:
 			parent_machine.set_state("normal")
 	
+# class JumpingState extends PlayerState: # TODO is jumping just a substate inside Normal?
+# 	# TODO Maybe make timed state component
+#	var total_duration: float = 0.5
+#	var current_time: float = 0.0
+#
+#	func get_name():
+#		return "jumping"
+#
+#	func enter():
+#		print("Jumping")
+
 
 # TODO input handling
 # I want a short buffer so that certain inputs gets queued if I want

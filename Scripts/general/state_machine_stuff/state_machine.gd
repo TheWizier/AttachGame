@@ -8,7 +8,7 @@ var states: Dictionary[String, State] = {}
 
 ## StateMachine
 ## start state will be first element in [param p_states]
-func _init(p_states: Array[State]) -> void:
+func set_states(p_states: Array[State]) -> void:
 	if p_states.is_empty():
 		push_error("states can not be empty")
 	for state in p_states:
@@ -17,9 +17,9 @@ func _init(p_states: Array[State]) -> void:
 	active_state.enter()
 
 func run_state_update(delta: float):
-	active_state.update(delta, self)
+	active_state.update(delta)
 func run_state_physics_update(delta: float):
-	active_state.physics_update(delta, self)
+	active_state.physics_update(delta)
 
 func set_state(new_state_name: String):
 	previous_state=active_state
