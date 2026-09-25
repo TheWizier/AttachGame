@@ -14,9 +14,9 @@ position = Vector2(205, 220)
 position = Vector2(529, 171)
 
 [node name="Node2D" type="Node2D" parent="." unique_id=499768818]
-position = Vector2(200, 50)
+position = Vector2(198, 50)
 
-[node name="AttachNode" parent="Node2D" unique_id=1063188863 instance=ExtResource("3_go42g")]
+[node name="AttachAnchor" parent="Node2D" unique_id=1063188863 instance=ExtResource("3_go42g")]
 scale = Vector2(2, 2)
 
 [node name="Sprite2D" type="Sprite2D" parent="Node2D" unique_id=1397522381]
