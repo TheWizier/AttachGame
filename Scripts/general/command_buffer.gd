@@ -4,10 +4,14 @@ class_name CommandBuffer
 # TODO We could change this buffer to only one action to avoid chains of queued actions (prioritize first)
 # TODO Or we could change it to empty the whole buffer when an action is consumed (prioritize by chosen order)
 # TODO This could also be implemented as a buffer of one where we replace according to that order
-var _buffered: Dictionary = {} # action_name -> tick issued
+var _buffered: Dictionary[String, int] = {} # action_name -> tick issued
+# var _buffered_release: Dictionary[String, int] = {}
 
 func buffer(action: String, tick: int) -> void:
 	_buffered[action] = tick
+
+# func buffer_release(action: String, tick: int) -> void: # TODO do implementation if needed
+# 	_buffered_release[action] = tick
 
 # TODO Might want to be able to say seconds to match logic easier with durations of other things
 # TODO or make everything use ticks (I think maybe under hood ticks but practically seconds is nicest)

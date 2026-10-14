@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://bbggksndwa3cg"]
 
 [ext_resource type="PackedScene" uid="uid://b78x13sh3dy2v" path="res://Scenes/player.tscn" id="1_mncer"]
+[ext_resource type="Script" uid="uid://cfb6luwrhrw5f" path="res://Scripts/test/test_moving_behaviour.gd" id="2_wicfy"]
 [ext_resource type="PackedScene" uid="uid://b818kl4elwnb" path="res://Scenes/attach_anchor.tscn" id="3_go42g"]
-
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_l6uhy"]
+[ext_resource type="Texture2D" uid="uid://chj2lixrprxnd" path="res://Sprites/pole.png" id="4_go42g"]
 
 [node name="Node2D" type="Node2D" unique_id=1319603201]
 
@@ -15,11 +15,14 @@ position = Vector2(529, 171)
 
 [node name="Node2D" type="Node2D" parent="." unique_id=499768818]
 position = Vector2(198, 50)
+script = ExtResource("2_wicfy")
 
 [node name="AttachAnchor" parent="Node2D" unique_id=1063188863 instance=ExtResource("3_go42g")]
+position = Vector2(2, 15)
 scale = Vector2(2, 2)
 
 [node name="Sprite2D" type="Sprite2D" parent="Node2D" unique_id=1397522381]
+z_index = -1
 position = Vector2(1.9999981, 0.5)
-scale = Vector2(87.99999, 83)
-texture = SubResource("PlaceholderTexture2D_l6uhy")
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("4_go42g")

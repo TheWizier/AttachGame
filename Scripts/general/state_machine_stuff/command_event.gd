@@ -17,3 +17,9 @@ func is_action(action: String) -> bool:
 
 func is_pressed() -> bool:
 	return type == Type.PRESSED
+
+func is_action_pressed(action: String) -> bool:
+	return self.is_action(action) and self.is_pressed()
+
+func is_action_released(action: String) -> bool:
+	return self.is_action(action) and not self.is_pressed()

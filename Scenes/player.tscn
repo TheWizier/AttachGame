@@ -1,10 +1,143 @@
 [gd_scene format=3 uid="uid://b78x13sh3dy2v"]
 
-[ext_resource type="Script" uid="uid://pjg8ihmv4lhm" path="res://Scripts/player_controller.gd" id="1_v0iea"]
-[ext_resource type="Texture2D" uid="uid://cd0e8sooq0g63" path="res://Sprites/MrAttach.png" id="2_cvnsp"]
+[ext_resource type="Script" uid="uid://pjg8ihmv4lhm" path="res://Scripts/general/player_controller.gd" id="1_v0iea"]
+[ext_resource type="Texture2D" uid="uid://dhm6dkbgieqo0" path="res://Sprites/Spritesheet.png" id="2_cvnsp"]
+[ext_resource type="Texture2D" uid="uid://df7ut8p66deep" path="res://Sprites/shadow.png" id="3_6t5aa"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_q4lbr"]
 size = Vector2(140, 76)
+
+[sub_resource type="Animation" id="Animation_6t5aa"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MrAttach:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("MrAttach:position:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(6, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("MrAttach:position:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(3, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/3/type = "bezier"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("MrAttach:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+
+[sub_resource type="Animation" id="Animation_cvnsp"]
+resource_name = "jump"
+length = 0.5
+step = 0.1
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MrAttach:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(6, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("MrAttach:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 2, 2, 2, 2),
+"points": PackedFloat32Array(3, 0, 0, 0, -40.5, -55.5, -0.016088538, 1.287083, 0.1, -8, -57.5, 0, 0, 0, 0, -31.5, -0.099999994, -36, 0.014443928, 5.1998143, -0.5, -0.099999994, 19, 0, 0),
+"times": PackedFloat32Array(0, 0.15, 0.2, 0.35, 0.5)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("MrAttach:rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.2, -0.5),
+"times": PackedFloat32Array(0)
+}
+
+[sub_resource type="Animation" id="Animation_vgqql"]
+resource_name = "test_animation"
+length = 0.5
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MrAttach:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 0]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("MrAttach:position:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0, 2),
+"points": PackedFloat32Array(6, -0.25, 0, 0.1, -57.5, 3.5, -0.02580974, 1, 0, 0, -2.5, -0.099999994, 46, 0, 0),
+"times": PackedFloat32Array(0, 0.2, 0.4)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("MrAttach:position:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(3, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_fkybt"]
+_data = {
+&"RESET": SubResource("Animation_6t5aa"),
+&"jump": SubResource("Animation_cvnsp"),
+&"test_animation": SubResource("Animation_vgqql")
+}
 
 [node name="Player" type="CharacterBody2D" unique_id=1793384669]
 collision_mask = 4
@@ -13,6 +146,9 @@ script = ExtResource("1_v0iea")
 [node name="MrAttach" type="Sprite2D" parent="." unique_id=7332358]
 position = Vector2(6, 3)
 texture = ExtResource("2_cvnsp")
+offset = Vector2(0, -87)
+hframes = 2
+vframes = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1435363873]
 position = Vector2(8, 54)
@@ -23,3 +159,12 @@ target_position = Vector2(0, -200)
 collision_mask = 2
 collide_with_areas = true
 collide_with_bodies = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=34165774]
+libraries/ = SubResource("AnimationLibrary_fkybt")
+
+[node name="ShadowSprite" type="Sprite2D" parent="." unique_id=857666746]
+modulate = Color(1, 1, 1, 0.38431373)
+show_behind_parent = true
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_6t5aa")

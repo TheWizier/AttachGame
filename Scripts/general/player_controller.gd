@@ -6,13 +6,16 @@ var scene_root: Node
 var active_anchor: AttachAnchor
 
 var attach_distance: float = 100
+var is_grounded: bool = true
+
 var command_buffer: CommandBuffer = CommandBuffer.new()
 
-const BUFFERABLE_ACTIONS := ["attack"]
-const TRACKED_ACTIONS := ["attack", "dodge", "special", "ranged"]
+const BUFFERABLE_ACTIONS := ["attack", "jump"]
+const TRACKED_ACTIONS := ["attack", "dodge", "special", "ranged", "jump"]
 
 @onready var attach_hitbox: Area2D = $Hitbox 
 @onready var attach_ray: RayCast2D = $RayCast2D
+@onready var animation_player: AnimationPlayer = $AnimationPlayer
 
 # Engine hooks
 
@@ -30,6 +33,7 @@ func _ready() -> void:
 	]:
 		states.append(state_type.new(self, player_state_machine))
 	player_state_machine.set_states(states)
+	animation_player.animation_finished.connect(_on_animation_finished)
 
 func _physics_process(delta: float) -> void:
 	player_state_machine.run_state_physics_update(delta)
@@ -50,6 +54,11 @@ func handle_command(command_event: CommandEvent) -> void:
 		if command_event.action in BUFFERABLE_ACTIONS:
 			command_buffer.buffer(command_event.action, command_event.tick)
 
+# Signals #
+
+func _on_animation_finished(animation_name: String):
+	assert(player_state_machine.current_state is PlayerState)
+	(player_state_machine.current_state as PlayerState).on_animation_finished(animation_name)
 
 # General functions #
 func attach(other: AttachAnchor):
@@ -79,6 +88,10 @@ class PlayerState extends State:
 	func _init(player: PlayerController, parent_machine: StateMachine):
 		super(parent_machine)
 		self.player = player
+	
+	# Virtual functions
+	func on_animation_finished(animation_name: String):
+		pass
 
 
 class NormalState extends PlayerState:
@@ -100,17 +113,44 @@ class NormalState extends PlayerState:
 		player.perform_movement(movement_speed)
 	
 	func command_update(command_event: CommandEvent) -> bool:
-		if command_event.is_action("special") and command_event.is_pressed():
-			if player.attach_ray.is_colliding():
-				player.attach(player.attach_ray.get_collider())
-				(parent_machine.states["forced-movement"] as ForcedMovement).configure(
+		if command_event.is_action_pressed("special"):
+			return perform_special_move()
+		if command_event.is_action_pressed("jump"):
+			return perform_jump()
+		return false
+	
+	func on_animation_finished(animation_name: String):
+		match animation_name:
+			"jump":
+				on_jump_finished()
+	
+	func perform_jump() -> bool:
+		if player.animation_player.is_playing():
+			return false
+		player.animation_player.play("jump")
+		# TODO Then do landing check here if for some reason we dont land but fall
+		player.is_grounded = false
+		return true
+	
+	func on_jump_finished():
+		player.is_grounded = true
+		# TODO Maybe improve try consume to not take current tick?
+		if player.command_buffer.try_consume("jump", parent_machine.current_tick, 10):
+			perform_jump()
+	
+	func perform_special_move() -> bool:
+		if player.attach_ray.is_colliding():
+			player.attach(player.attach_ray.get_collider())
+			(parent_machine.states["forced-movement"] as ForcedMovement).configure(
 					"attached",
 					0.2,
 					player.position.normalized()*player.attach_distance
-				)
-				parent_machine.set_state("forced-movement")
+			)
+			parent_machine.set_state("forced-movement")
 			return true
 		return false
+
+
 
 
 
@@ -179,12 +219,18 @@ class AttachedState extends PlayerState:
 			transition()
 	
 	func command_update(command_event: CommandEvent):
-		if command_event.is_action("special") and command_event.is_pressed():
+		if command_event.is_action_pressed("special"):
 			transition()
 			return true
-		if command_event.is_action("attack") and command_event.is_pressed():
+		if command_event.is_action_pressed("attack"):
 			# TODO attack here
+			player.animation_player.play("test_animation")
 			print("ATTACK!")
+			return true
+		if command_event.is_action_pressed("jump"):
+			player.animation_player.play("jump")
+			player.is_grounded = false
+			parent_machine.set_state("normal")
 			return true
 		return false
 
