@@ -1,6 +1,8 @@
 extends CharacterBody2D
 class_name PlayerController
 
+var peer = ENetMultiplayerPeer.new()
+
 var player_state_machine: StateMachine
 var scene_root: Node
 var active_anchor: AttachAnchor
@@ -10,14 +12,23 @@ var is_grounded: bool = true
 
 var command_buffer: CommandBuffer = CommandBuffer.new()
 
+# enum Action { ATTACK, JUMP, SPECIAL } # TODO what about mapping to input then?
 const BUFFERABLE_ACTIONS := ["attack", "jump"]
-const TRACKED_ACTIONS := ["attack", "dodge", "special", "ranged", "jump"]
+const TRACKED_ACTIONS := ["attack", "special", "jump"] # "ranged", "dodge",
 
-@onready var attach_hitbox: Area2D = $Hitbox 
 @onready var attach_ray: RayCast2D = $RayCast2D
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 
+@rpc
+func test_rpc():
+	print("HEPP")
+	print("ID:", multiplayer.get_unique_id())
+
 # Engine hooks
+
+func _enter_tree() -> void:
+	pass
+	# set_multiplayer_authority(name.to_int()) # TODO they used the name as the peer id by spawning and setting name
 
 func _ready() -> void:
 	scene_root = get_tree().current_scene
@@ -35,13 +46,23 @@ func _ready() -> void:
 	player_state_machine.set_states(states)
 	animation_player.animation_finished.connect(_on_animation_finished)
 
+	print("AUTH: ", get_multiplayer_authority())
+	print("isauth: ", is_multiplayer_authority())
+	print("myid: ", multiplayer.get_unique_id())
+
 func _physics_process(delta: float) -> void:
+	if not is_multiplayer_authority():
+		return
 	player_state_machine.run_state_physics_update(delta)
 
 func _process(delta: float) -> void:
+	if not is_multiplayer_authority():
+		return
 	player_state_machine.run_state_update(delta)
 
 func _input(event: InputEvent) -> void:
+	if not is_multiplayer_authority():
+		return
 	for action in TRACKED_ACTIONS:
 		if event.is_action_pressed(action):
 			handle_command(CommandEvent.new(action, CommandEvent.Type.PRESSED, player_state_machine.current_tick))
@@ -78,6 +99,13 @@ func perform_movement(movement_speed: float):
 	velocity = input_direction * movement_speed
 	move_and_slide()
 
+func perform_jump() -> bool:
+	if animation_player.is_playing():
+		return false
+	animation_player.play("jump")
+	# TODO Then do landing check here if for some reason we dont land but fall
+	is_grounded = false
+	return true
 
 
 # State definitions #
@@ -116,7 +144,7 @@ class NormalState extends PlayerState:
 		if command_event.is_action_pressed("special"):
 			return perform_special_move()
 		if command_event.is_action_pressed("jump"):
-			return perform_jump()
+			return player.perform_jump()
 		return false
 	
 	func on_animation_finished(animation_name: String):
@@ -124,19 +152,11 @@ class NormalState extends PlayerState:
 			"jump":
 				on_jump_finished()
 	
-	func perform_jump() -> bool:
-		if player.animation_player.is_playing():
-			return false
-		player.animation_player.play("jump")
-		# TODO Then do landing check here if for some reason we dont land but fall
-		player.is_grounded = false
-		return true
-	
 	func on_jump_finished():
 		player.is_grounded = true
 		# TODO Maybe improve try consume to not take current tick?
 		if player.command_buffer.try_consume("jump", parent_machine.current_tick, 10):
-			perform_jump()
+			player.perform_jump()
 	
 	func perform_special_move() -> bool:
 		if player.attach_ray.is_colliding():
@@ -174,7 +194,6 @@ class ForcedMovement extends PlayerState: # TODO se note on PlayerState
 		print("Forced movement!")
 		current_time=0
 		start_position = player.position
-		# target_position = player.position.normalized()*player.attach_distance
 
 	func update(delta):
 		# Lerp into position
@@ -197,7 +216,6 @@ class AttachedState extends PlayerState:
 			"normal",
 			0.2,
 			player.position # TODO find a valid landing spot (for now just in place)
-			# TODO this causes bug where I guess this position doesnt update until next frame after detach
 		)
 		parent_machine.set_state("forced-movement")
 
@@ -228,8 +246,8 @@ class AttachedState extends PlayerState:
 			print("ATTACK!")
 			return true
 		if command_event.is_action_pressed("jump"):
-			player.animation_player.play("jump")
-			player.is_grounded = false
+			player.perform_jump()
+			player.detach()
 			parent_machine.set_state("normal")
 			return true
 		return false

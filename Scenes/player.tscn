@@ -150,8 +150,7 @@ offset = Vector2(0, -87)
 hframes = 2
 vframes = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1435363873]
-position = Vector2(8, 54)
+[node name="Hitbox" type="CollisionShape2D" parent="." unique_id=1435363873]
 shape = SubResource("RectangleShape2D_q4lbr")
 
 [node name="RayCast2D" type="RayCast2D" parent="." unique_id=2020096371]

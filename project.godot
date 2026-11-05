@@ -19,6 +19,12 @@ run/main_scene="uid://bbggksndwa3cg"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://Sprites/icon.svg"
 
+[autoload]
+
+SteamMultiplayerManager="*uid://wjgnnmj30cpo"
+ENetMultiplayerManager="*uid://om263ammmlf"
+MultiplayerLobby="*uid://df3y3a1wb8o7g"
+
 [debug]
 
 gdscript/warnings/shadowed_variable=0
@@ -84,3 +90,8 @@ special={
 textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+
+[steam]
+
+initialization/app_data/app_id=480
+initialization/processes/initialize_on_startup=true

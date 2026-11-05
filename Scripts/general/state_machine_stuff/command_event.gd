@@ -1,9 +1,9 @@
-﻿extends RefCounted
+extends RefCounted
 class_name CommandEvent
 
 enum Type { PRESSED, RELEASED }
 
-var action: String
+var action: String # Int enum
 var type: Type
 var tick: int # the tick this command was issued/received on
 
