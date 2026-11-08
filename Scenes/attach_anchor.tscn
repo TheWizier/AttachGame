@@ -6,7 +6,6 @@
 radius = 30.0
 
 [node name="AttachAnchor" type="Area2D" unique_id=1628342537]
-position = Vector2(2, 0)
 collision_layer = 2
 monitoring = false
 script = ExtResource("1_ymkff")

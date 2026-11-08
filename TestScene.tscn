@@ -17,7 +17,7 @@ position = Vector2(198, 50)
 script = ExtResource("2_wicfy")
 
 [node name="AttachAnchor" parent="Pole" unique_id=1063188863 instance=ExtResource("3_go42g")]
-position = Vector2(2, 15)
+position = Vector2(0, 15)
 scale = Vector2(2, 2)
 
 [node name="Sprite2D" type="Sprite2D" parent="Pole" unique_id=1397522381]
@@ -57,7 +57,7 @@ text = "Host"
 
 [node name="SpawnPoint" type="Node2D" parent="." unique_id=1073773689]
 
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1162191476]
+[node name="PlayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1162191476]
 _spawnable_scenes = PackedStringArray("uid://b78x13sh3dy2v")
 spawn_path = NodePath("..")
 script = ExtResource("5_tq6uv")

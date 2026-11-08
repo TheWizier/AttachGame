@@ -2,6 +2,7 @@ extends MultiplayerSpawner
 
 var parent_node: Node = self
 var player_scene: PackedScene = preload("res://Scenes/player.tscn")
+@onready var orchestrator: MultiplayerOrchestrator = $MultiplayerOrchestrator
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -17,11 +18,18 @@ func on_lobby_join(peer_id: int):
 	if is_multiplayer_authority():
 		spawn(
 			{
-				"peer_id": peer_id
+				"peer_id": peer_id,
+				"unique_id": orchestrator.aquire_unique_id()
 			}
 		)
 
 func _spawn_player(data: Dictionary):
-	var player_node: Node = player_scene.instantiate()
-	player_node.set_multiplayer_authority(data.peer_id)
-	return player_node
+	return spawn_entity(player_scene, data)
+
+# TODO: Move so that it is accessible to all spawners
+func spawn_entity(entity_scene: PackedScene, data: Dictionary):
+	var entity_node: Node = entity_scene.instantiate()
+	entity_node.set_multiplayer_authority(data.peer_id)
+	var synchronizer: CustomSynchronizer = entity_node.find_child("CustomSynchronizer")
+	synchronizer.id = data.unique_id
+	return entity_node
