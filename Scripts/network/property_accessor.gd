@@ -7,7 +7,9 @@ extends MultiplayerSynchronizer
 enum Filter { ALL, ALWAYS, ON_CHANGE, SPAWN }
 
 var _config: SceneReplicationConfig  # the config you authored in the Replication panel
-
+signal pre_read
+signal pre_write
+# NOTE: Dont use the built in signals as we broke them a bit :D
 
 func _enter_tree() -> void:
 	if _config == null:
@@ -29,6 +31,7 @@ func get_paths(filter: Filter = Filter.ALL) -> Array[NodePath]:
 
 ## Current values of the selected properties, in the same order as get_paths().
 func read_values(filter: Filter = Filter.ALL) -> Array:
+	pre_read.emit()
 	var out: Array = []
 	var root := get_node_or_null(root_path)
 	if root == null:
@@ -46,6 +49,7 @@ func read_values(filter: Filter = Filter.ALL) -> Array:
 
 ## Applies values (same order and filter as read_values) to the target properties.
 func write_values(values: Array, filter: Filter = Filter.ALL) -> Error:
+	pre_write.emit()
 	var root := get_node_or_null(root_path)
 	if root == null:
 		push_error("PropertyAccessor: root_path '%s' does not resolve" % root_path)

@@ -19,6 +19,7 @@ const TRACKED_ACTIONS := ["attack", "special", "jump"] # "ranged", "dodge",
 @onready var attach_ray: RayCast2D = $RayCast2D
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 
+
 @rpc
 func test_rpc():
 	print("HEPP")
@@ -46,9 +47,9 @@ func _ready() -> void:
 	player_state_machine.set_states(states)
 	animation_player.animation_finished.connect(_on_animation_finished)
 
-	print("AUTH: ", get_multiplayer_authority())
-	print("isauth: ", is_multiplayer_authority())
-	print("myid: ", multiplayer.get_unique_id())
+	# print("AUTH: ", get_multiplayer_authority())
+	# print("isauth: ", is_multiplayer_authority())
+	# print("myid: ", multiplayer.get_unique_id())
 
 func _physics_process(delta: float) -> void:
 	if not is_multiplayer_authority():
