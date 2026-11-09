@@ -14,6 +14,7 @@ func _ready() -> void:
 	pass # Replace with function body.
 
 func _physics_process(delta: float) -> void:
+	pass
 	network_update()
 
 func network_update():
@@ -22,6 +23,7 @@ func network_update():
 			send_my_data(synchronizer)
 
 func aquire_unique_id() -> int:
+	print("AQUIRE_ID!!!")
 	if is_multiplayer_authority():
 		unique_id_counter += 1
 		return unique_id_counter
@@ -33,11 +35,11 @@ func register_custom_synchronizer(synchronizer: CustomSynchronizer):
 	synchronizers.append(synchronizer)
 
 func send_my_data(synchronizer: CustomSynchronizer):
-	synchronize.rpc(synchronizer.id, synchronizer.data)
+	synchronize.rpc(synchronizer.id, synchronizer.read_values())
 
 @rpc("any_peer", "call_remote", "unreliable")
-func synchronize(id: int, data: Dictionary):
-	for synchronizer in synchronizers:
+func synchronize(id: int, data: Array):
+	for synchronizer: CustomSynchronizer in synchronizers:
 		if(synchronizer.id == id):
-			synchronizer.recieve_data(data)
+			synchronizer.write_values(data)
 			break

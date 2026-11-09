@@ -2,10 +2,11 @@ extends MultiplayerSpawner
 
 var parent_node: Node = self
 var player_scene: PackedScene = preload("res://Scenes/player.tscn")
-@onready var orchestrator: MultiplayerOrchestrator = $MultiplayerOrchestrator
+var orchestrator: MultiplayerOrchestrator
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	orchestrator = get_tree().current_scene.find_child("MultiplayerOrchestrator")
 	self.spawn_function = _spawn_player # TODO: can we just override?
 	MultiplayerLobby.on_lobby_join.connect(on_lobby_join)
 
