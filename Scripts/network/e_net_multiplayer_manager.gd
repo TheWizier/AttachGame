@@ -40,8 +40,10 @@ func host_lobby():
 		return error
 	multiplayer.multiplayer_peer = peer
 
-	# players[1] = player_info
-	# player_connected.emit(1, player_info)
+	# Let the server join as a player
+	var player_name = "NONAME" # TODO: add names?
+	print("SERVERID: ", multiplayer.multiplayer_peer.get_unique_id())
+	MultiplayerLobby.join(multiplayer.multiplayer_peer.get_unique_id(), player_name)
 
 func _on_player_connected(id: int):
 	print("ENET player connected")

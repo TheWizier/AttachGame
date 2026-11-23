@@ -1,4 +1,4 @@
-extends CharacterBody2D
+extends AttachCharacter
 class_name PlayerController
 
 var peer = ENetMultiplayerPeer.new()
@@ -32,6 +32,7 @@ func _enter_tree() -> void:
 	# set_multiplayer_authority(name.to_int()) # TODO they used the name as the peer id by spawning and setting name
 
 func _ready() -> void:
+	super._ready()
 	scene_root = get_tree().current_scene
 	
 	player_state_machine = StateMachine.new()
@@ -57,6 +58,7 @@ func _physics_process(delta: float) -> void:
 	player_state_machine.run_state_physics_update(delta)
 
 func _process(delta: float) -> void:
+	super._process(delta)
 	if not is_multiplayer_authority():
 		return
 	player_state_machine.run_state_update(delta)
@@ -87,18 +89,28 @@ func attach(other: AttachAnchor):
 	if active_anchor:
 		active_anchor.lose_attachment(self)
 	active_anchor = other
-	reparent(active_anchor)
+	print("ORIG Before reparent: ", get_parent())
+	# reparent(active_anchor)
+	print("RELPOS: ", relative_position)
+	relative_position = attached_to.global_position+relative_position-other.global_position
+	print("newRELPOS: ", relative_position)
+	attached_to = active_anchor
+	print("ORIG After reparent: ", get_parent())
 	active_anchor.receive_attachment(self)
 
 func detach():
-	reparent(scene_root)
+	# reparent(scene_root)
+	relative_position = attached_to.global_position+relative_position #No minus since scene root
+	attached_to = scene_root
 	active_anchor.lose_attachment(self)
 	active_anchor = null
 	
 func perform_movement(movement_speed: float):
 	var input_direction: Vector2 = Input.get_vector("left", "right", "up", "down")
-	velocity = input_direction * movement_speed
-	move_and_slide()
+	velocity = input_direction * movement_speed # TODO: relative velocity on moving platform?
+	var previous_position = position
+	move_and_slide() # TODO: investigate
+	relative_position += position - previous_position
 
 func perform_jump() -> bool:
 	if animation_player.is_playing():
@@ -165,7 +177,7 @@ class NormalState extends PlayerState:
 			(parent_machine.states["forced-movement"] as ForcedMovement).configure(
 					"attached",
 					0.2,
-					player.position.normalized()*player.attach_distance
+					player.relative_position.normalized()*player.attach_distance
 			)
 			parent_machine.set_state("forced-movement")
 			return true
@@ -194,13 +206,13 @@ class ForcedMovement extends PlayerState: # TODO se note on PlayerState
 	func enter():
 		print("Forced movement!")
 		current_time=0
-		start_position = player.position
+		start_position = player.relative_position
 
 	func update(delta):
 		# Lerp into position
 		current_time+=delta
 		current_time=min(total_duration, current_time)
-		player.position=lerp(start_position, target_position, current_time/total_duration)
+		player.relative_position=lerp(start_position, target_position, current_time/total_duration)
 		# Exit condition
 		if current_time == total_duration:
 			parent_machine.set_state(exit_state)
@@ -216,7 +228,7 @@ class AttachedState extends PlayerState:
 		(parent_machine.states["forced-movement"] as ForcedMovement).configure(
 			"normal",
 			0.2,
-			player.position # TODO find a valid landing spot (for now just in place)
+			player.relative_position # TODO find a valid landing spot (for now just in place)
 		)
 		parent_machine.set_state("forced-movement")
 
@@ -231,7 +243,7 @@ class AttachedState extends PlayerState:
 
 	func update(delta):
 		current_time+=delta
-		player.position = player.position.rotated(rotation_speed*delta)
+		player.relative_position = player.relative_position.rotated(rotation_speed*delta)
 		# Exit condition
 		if current_time >= max_duration:
 			#parent_machine.set_state("detaching")
