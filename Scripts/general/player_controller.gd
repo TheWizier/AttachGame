@@ -4,8 +4,6 @@ class_name PlayerController
 var peer = ENetMultiplayerPeer.new()
 
 var player_state_machine: StateMachine
-var scene_root: Node
-var active_anchor: AttachAnchor
 
 var attach_distance: float = 100
 var is_grounded: bool = true
@@ -33,7 +31,6 @@ func _enter_tree() -> void:
 
 func _ready() -> void:
 	super._ready()
-	scene_root = get_tree().current_scene
 	
 	player_state_machine = StateMachine.new()
 	var states: Array[State]
@@ -85,27 +82,6 @@ func _on_animation_finished(animation_name: String):
 	(player_state_machine.current_state as PlayerState).on_animation_finished(animation_name)
 
 # General functions #
-# TODO: move these two to attach_character.gd
-func attach(other: AttachAnchor):
-	if active_anchor:
-		active_anchor.lose_attachment(self)
-	active_anchor = other
-	print("ORIG Before reparent: ", get_parent())
-	# reparent(active_anchor)
-	print("RELPOS: ", relative_position)
-	relative_position = attached_to.global_position+relative_position-other.global_position
-	print("newRELPOS: ", relative_position)
-	attached_to = active_anchor
-	print("ORIG After reparent: ", get_parent())
-	active_anchor.receive_attachment(self)
-
-func detach():
-	# reparent(scene_root)
-	relative_position = attached_to.global_position+relative_position #No minus since scene root
-	attached_to = scene_root
-	active_anchor.lose_attachment(self)
-	active_anchor = null
-	
 func perform_movement(movement_speed: float):
 	var input_direction: Vector2 = Input.get_vector("left", "right", "up", "down")
 	velocity = input_direction * movement_speed # TODO: relative velocity on moving platform?
