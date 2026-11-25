@@ -4,8 +4,8 @@
 [ext_resource type="PackedScene" uid="uid://b818kl4elwnb" path="res://Scenes/attach_anchor.tscn" id="3_go42g"]
 [ext_resource type="Texture2D" uid="uid://chj2lixrprxnd" path="res://Sprites/pole.png" id="4_go42g"]
 [ext_resource type="Script" uid="uid://bbq6jkx88raq3" path="res://Scripts/gui/gui_control.gd" id="5_sreuk"]
-[ext_resource type="Script" uid="uid://b3kcn75iyfw5x" path="res://multiplayer_spawner.gd" id="5_tq6uv"]
-[ext_resource type="Script" uid="uid://cwthewrnh4dnu" path="res://Scripts/network/multiplayer_orchestrator.gd" id="6_tq6uv"]
+[ext_resource type="Script" uid="uid://cii8nsc6vwvxu" path="res://Scripts/network/network_id_manager.gd" id="5_tq6uv"]
+[ext_resource type="Script" uid="uid://b3kcn75iyfw5x" path="res://Scripts/network/multiplayer_spawner.gd" id="6_tq6uv"]
 
 [node name="TestScene" type="Node2D" unique_id=1319603201]
 
@@ -57,11 +57,10 @@ text = "Host"
 
 [node name="SpawnPoint" type="Node2D" parent="." unique_id=1073773689]
 
-[node name="PlayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1162191476]
-_spawnable_scenes = PackedStringArray("uid://b78x13sh3dy2v")
-spawn_path = NodePath("..")
+[node name="NetworkIdManager" type="Node" parent="." unique_id=700607926]
 script = ExtResource("5_tq6uv")
+metadata/_custom_type_script = "uid://cii8nsc6vwvxu"
 
-[node name="MultiplayerOrchestrator" type="Node" parent="." unique_id=2037333529]
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=203608286]
+spawn_path = NodePath("../SpawnPoint")
 script = ExtResource("6_tq6uv")
-metadata/_custom_type_script = "uid://cwthewrnh4dnu"

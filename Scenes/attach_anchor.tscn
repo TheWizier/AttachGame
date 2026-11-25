@@ -5,10 +5,13 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_dx4vw"]
 radius = 30.0
 
-[node name="AttachAnchor" type="Area2D" unique_id=1628342537]
-collision_layer = 2
-monitoring = false
+[node name="AttachAnchor" type="Node2D" unique_id=19849150]
 script = ExtResource("1_ymkff")
+metadata/_custom_type_script = "uid://dumr64jpy6sp"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=259222513]
+[node name="Area2D" type="Area2D" parent="." unique_id=470039355]
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=259222513]
 shape = SubResource("CircleShape2D_dx4vw")

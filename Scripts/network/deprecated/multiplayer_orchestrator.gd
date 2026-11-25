@@ -1,6 +1,8 @@
 class_name MultiplayerOrchestrator
 extends Node
 
+# TODO: remove old sync stuff later
+
 # Dict peer->sync->dict of obj data
 var peer_to_data: Dictionary = {}
 

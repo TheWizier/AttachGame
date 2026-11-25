@@ -85,6 +85,7 @@ func _on_animation_finished(animation_name: String):
 	(player_state_machine.current_state as PlayerState).on_animation_finished(animation_name)
 
 # General functions #
+# TODO: move these two to attach_character.gd
 func attach(other: AttachAnchor):
 	if active_anchor:
 		active_anchor.lose_attachment(self)
@@ -173,7 +174,7 @@ class NormalState extends PlayerState:
 	
 	func perform_special_move() -> bool:
 		if player.attach_ray.is_colliding():
-			player.attach(player.attach_ray.get_collider())
+			player.attach((player.attach_ray.get_collider() as Node).get_parent())
 			(parent_machine.states["forced-movement"] as ForcedMovement).configure(
 					"attached",
 					0.2,
