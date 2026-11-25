@@ -25,8 +25,6 @@ func _ready() -> void:
 	relative_position = global_position
  
 func _process(_delta: float) -> void:
-	if attached_to == null:
-		return
 		
 	# If the anchor was freed under us: stay where we are, in world space.
 	if not is_instance_valid(attached_to):
@@ -35,14 +33,13 @@ func _process(_delta: float) -> void:
 	
 	# If attached_to_id was changed by network, then update the attached_to node.
 	if _id_of(attached_to) != attached_to_id:
-		attached_to = _find_anchor(attached_to_id)
+		_anchor = _find_anchor(attached_to_id)
 		if attached_to == null:
 			push_error("No anchor matches attach id: ", attached_to_id)
 			return
 	
 	# Update actual position of node based on relative position and anchor
 	global_position = attached_to.global_position + relative_position
-
 
  
 func _find_anchor(id: int) -> Node2D:
@@ -63,5 +60,6 @@ func _id_of(node: Node2D) -> int:
 			"AttachCharacter: '%s' must be an AttachAnchor with a non-zero net_id to be synced"
 			% node.name
 		)
+		print(node.net_id)
 		return WORLD_ID
 	return anchor.net_id

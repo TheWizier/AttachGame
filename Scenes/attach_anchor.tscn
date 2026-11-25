@@ -5,6 +5,11 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_dx4vw"]
 radius = 30.0
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ymkff"]
+properties/0/path = NodePath(".:net_id")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
 [node name="AttachAnchor" type="Node2D" unique_id=19849150]
 script = ExtResource("1_ymkff")
 metadata/_custom_type_script = "uid://dumr64jpy6sp"
@@ -15,3 +20,6 @@ collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=259222513]
 shape = SubResource("CircleShape2D_dx4vw")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1913654903]
+replication_config = SubResource("SceneReplicationConfig_ymkff")
